@@ -32,6 +32,9 @@ class CartView extends Component {
         () => saveCart(this.state.cartArray)
     );
     }
+    incrQuatity(id) {
+        global.incrQuantity(id);
+    }
 
     incrQuantity(productId) {
         const newCart = this.state.cartArray.map(e => {
@@ -41,9 +44,9 @@ class CartView extends Component {
         this.setState({ cartArray: newCart });
     }
 
-    decrQuantity(productId) {
+    // decrQuantity(productId) {
         
-            }
+    //         }
 
     gotoDetail() {
         const { navigate } = this.props.navigation;
