@@ -21,6 +21,8 @@ class CartView extends Component {
         };
         global.addProductToCart = this.addProductToCart.bind(this);
         global.incrQuantity = this.incrQuantity.bind(this);
+        global.decrQuantity = this.decrQuantity.bind(this);
+        global.removeProduct = this.removeProduct.bind(this);
     }
     componentWillMount() {
         getCart()
@@ -32,7 +34,7 @@ class CartView extends Component {
         () => saveCart(this.state.cartArray)
     );
     }
-    incrQuatity(id) {
+    aincrQuantity(id) {
         global.incrQuantity(id);
     }
 
@@ -41,12 +43,32 @@ class CartView extends Component {
             if (e.product.id !== productId) return e;
             return { product: e.product, quantity: e.quantity + 1 };
         });
-        this.setState({ cartArray: newCart });
+        this.setState({ cartArray: newCart },
+            () => saveCart(this.state.cartArray)
+        );
+    }
+    decrQuantity(productId) {
+        const newCart = this.state.cartArray.map(e => {
+            if (e.product.id !== productId) return e;
+            return { product: e.product, quantity: e.quantity - 1 };
+        });
+        this.setState({ cartArray: newCart }, 
+            () => saveCart(this.state.cartArray)
+        );
     }
 
-    // decrQuantity(productId) {
-        
-    //         }
+    removeProduct(productId) {
+        const newCart = this.state.cartArray.filter(e => e.product.id !== productId);
+        this.setState({ cartArray: newCart }, 
+            () => saveCart(this.state.cartArray)
+        );
+    }      
+    adecrQuantity(id) {
+        global.decrQuantity(id);
+    }
+    aremoveProduct(id) {
+        global.removeProduct(id);
+    }
 
     gotoDetail() {
         const { navigate } = this.props.navigation;
@@ -75,7 +97,7 @@ class CartView extends Component {
                                 style={{ justifyContent: 'space-between', flexDirection: 'row' }}
                                 >
                                     <Text style={txtName}>{toTitleCase(item.product.name)}</Text>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.aremoveProduct(item.product.id)}>
                                         <Text 
                                         style={{ fontFamily: 'Avenir', color: '#969696' }}
                                         >X</Text>
@@ -87,12 +109,12 @@ class CartView extends Component {
                                 <View style={productController}>
                                     <View style={numberOfProduct}>
                                         <TouchableOpacity 
-                                        onPress={() => this.incrQuatity(item.product.id)}
+                                        onPress={() => this.aincrQuantity(item.product.id)}
                                         >
                                             <Text>+</Text>
                                         </TouchableOpacity>
                                         <Text>{item.quantity}</Text>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => this.adecrQuantity(item.product.id)}>
                                             <Text>-</Text>
                                         </TouchableOpacity>
                                     </View>
