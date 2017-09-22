@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import global from '../global';
 import saveCart from '../../../api/saveCart';
-//import getCart from '../../../api/getCart';
+import getCart from '../../../api/getCart';
 
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
@@ -20,20 +20,30 @@ class CartView extends Component {
             cartArray: []
         };
         global.addProductToCart = this.addProductToCart.bind(this);
+        global.incrQuantity = this.incrQuantity.bind(this);
     }
-    /*componentDidMount() {
+    componentWillMount() {
         getCart()
         .then(cartArray => this.setState({ cartArray }));
-    }*/
+    }
     addProductToCart(product) {
-        this.setState({ cartArray: this.state.cartArray.concat({ product, quanlity: 1 }) },
+        this.setState({ 
+            cartArray: this.state.cartArray.concat({ product, quanlity: 1 }) },
         () => saveCart(this.state.cartArray)
     );
     }
 
-    incrQuatity(id) {
-        global.incrQuantity(id);
+    incrQuantity(productId) {
+        const newCart = this.state.cartArray.map(e => {
+            if (e.product.id !== productId) return e;
+            return { product: e.product, quantity: e.quantity + 1 };
+        });
+        this.setState({ cartArray: newCart });
     }
+
+    decrQuantity(productId) {
+        
+            }
 
     gotoDetail() {
         const { navigate } = this.props.navigation;
@@ -50,7 +60,7 @@ class CartView extends Component {
                 <FlatList
                     contentContainerStyle={main}
                     data={cartArray}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.product.id}
                     renderItem={({ item }) => (
                         <View style={productStyle}>
                             <Image 
