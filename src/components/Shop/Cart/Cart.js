@@ -80,6 +80,8 @@ class CartView extends Component {
             txtName, txtPrice, productImage, numberOfProduct,
             txtShowDetail, showDetailContainer } = styles;
         const { cartArray } = this.state;
+        const arrTotal = cartArray.map(e => e.product.price * e.quantity);
+        const total = arrTotal.length ? arrTotal.reduce((a, b) => a + b) : 0;
         return (
             <View style={wrapper}>
                 <FlatList
@@ -97,7 +99,9 @@ class CartView extends Component {
                                 style={{ justifyContent: 'space-between', flexDirection: 'row' }}
                                 >
                                     <Text style={txtName}>{toTitleCase(item.product.name)}</Text>
-                                    <TouchableOpacity onPress={() => this.aremoveProduct(item.product.id)}>
+                                    <TouchableOpacity 
+                                    onPress={() => this.aremoveProduct(item.product.id)}
+                                    >
                                         <Text 
                                         style={{ fontFamily: 'Avenir', color: '#969696' }}
                                         >X</Text>
@@ -114,7 +118,9 @@ class CartView extends Component {
                                             <Text>+</Text>
                                         </TouchableOpacity>
                                         <Text>{item.quantity}</Text>
-                                        <TouchableOpacity onPress={() => this.adecrQuantity(item.product.id)}>
+                                        <TouchableOpacity 
+                                        onPress={() => this.adecrQuantity(item.product.id)}
+                                        >
                                             <Text>-</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -127,7 +133,7 @@ class CartView extends Component {
                     )}
                 />
                 <TouchableOpacity style={checkoutButton}>
-                    <Text style={checkoutTitle}>TOTAL {1000}$ CHECKOUT NOW</Text>
+                    <Text style={checkoutTitle}>TOTAL {total}$ CHECKOUT NOW</Text>
                 </TouchableOpacity>
             </View>
         );
